@@ -20,7 +20,7 @@ Pour commencer à utiliser cette API, veuillez suivre les instructions ci-dessou
 3. Copiez `.env.example` en `.env` et configurez votre base de données.
 4. Exécutez `php artisan key:generate` pour générer la clé de l'application.
 5. Exécutez `docker compose up` pour éxécuter la base de données.
-6. Exécutez `php artisan migrate` pour créer les tables de la base de données.
+6. Exécutez `php artisan migrate:refresh --seed` pour créer les tables de la base de données et les données de test.
 7. Exécutez `php artisan serve` pour démarrer le serveur de développement.
 
 ### Utilisation
