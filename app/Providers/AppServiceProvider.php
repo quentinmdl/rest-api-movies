@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Repository\MovieRepository;
+use App\Repositories\MovieRepository;
 use Illuminate\Support\ServiceProvider;
 use App\Interfaces\MovieRepositoryInterface;
 
