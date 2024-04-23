@@ -3,8 +3,7 @@ namespace App\Http\Services;
 
 use Illuminate\Support\Facades\Http;
 
-class MovieService {
-
+class CategoryService {
 
     public function __construct() {
         try {
@@ -36,11 +35,11 @@ class MovieService {
 
 
 
-    public function getMovies($page = 1) {
+    public function getCategories($page = 1) {
         try {
             $items = [];
 
-            $response = $this->client->request('GET', env('API_DBMOVIE_URL').'movie/changes?page='.$page, [
+            $response = $this->client->request('GET', env('API_DBMOVIE_URL').'/genre/movie/list?language=en', [
                 'headers' => [
                     'Authorization' => 'Bearer '.env('API_DBMOVIE_KEY'),
                     'accept' => 'application/json',
@@ -50,29 +49,15 @@ class MovieService {
             if ($response->getStatusCode() != 200 && $response->getStatusCode() != 401) {
                 throw new \Exception("Erreur inattendue: " . $response->getStatusCode());
             }
-            $movies = json_decode($response->getBody()->getContents(), true);
+            $categories = json_decode($response->getBody()->getContents(), true);
 
-            if(!empty($movies['results'])) {
-                foreach($movies['results'] as $movie) {
-                    try {
-                        $response = $this->client->request('GET', env('API_DBMOVIE_URL').'movie/'.$movie['id'], [
-                            'headers' => [
-                                'Authorization' => 'Bearer '.env('API_DBMOVIE_KEY'),
-                                'accept' => 'application/json',
-                            ],
-                        ]);
-                        if ($response->getStatusCode() == 200) {
-                            $movieDetails = json_decode($response->getBody()->getContents(), true);
-                            $items[] = $movieDetails;
-                        } elseif ($response->getStatusCode() == 404) {
-                            throw new \Exception("Film non trouvé avec l'ID externe: " . $movie['id']);
-                        }
-                    } catch (\GuzzleHttp\Exception\ClientException $e) {
-                        continue;
-                        // throw new \Exception("Erreur lors de la recherche du film: " . $e->getMessage());
-                    }
-                }
+            foreach ($categories['genres'] as $category) {
+                $items[] = [
+                    'name' => $category['name'],
+                ];
             }
+
+
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             throw new \Exception("Erreur lors de la requête: " . $e->getMessage());
         }

@@ -27,7 +27,9 @@ class MovieRepository implements MovieRepositoryInterface
    }
 
    public function update(array $data,$id){
-      return tap(Movie::whereId($id)->update($data));
+      $movie = Movie::find($id);
+      $movie->update($data);
+      return $movie;
    }
    
    public function delete($id){

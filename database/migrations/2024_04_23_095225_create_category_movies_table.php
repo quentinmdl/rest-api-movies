@@ -13,9 +13,15 @@ return new class extends Migration
     {
         Schema::create('category_movies', function (Blueprint $table) {
             $table->id();
-            // $table->foreignId('category_id')->index();
-            // $table->foreignId('movie_id')->index();
+            $table->unsignedBiginteger('category_id')->unsigned();
+            $table->unsignedBiginteger('movie_id')->unsigned();
             $table->timestamps();
+
+            $table->foreign('category_id')->references('id')
+                 ->on('categories')->onDelete('cascade');
+            $table->foreign('movie_id')->references('id')
+                ->on('movies')->onDelete('cascade');
+
         });
     }
 

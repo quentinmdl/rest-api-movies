@@ -2,9 +2,14 @@
 
 namespace App\Providers;
 
-use App\Repositories\MovieRepository;
 use Illuminate\Support\ServiceProvider;
+
+use App\Repositories\MovieRepository;
 use App\Interfaces\MovieRepositoryInterface;
+
+use App\Repositories\CategoryRepository;
+use App\Interfaces\CategoryRepositoryInterface;
+
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class AppServiceProvider extends ServiceProvider
@@ -15,6 +20,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(MovieRepositoryInterface::class,MovieRepository::class);
+        $this->app->bind(CategoryRepositoryInterface::class,CategoryRepository::class);
     }
 
     /**

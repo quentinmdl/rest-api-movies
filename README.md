@@ -1,6 +1,6 @@
 # Documentation de l'API des Films
 
-Bienvenue dans la documentation de l'API des Films. Cette API permet de créer, lire, mettre à jour et supprimer des informations sur les films.
+Bienvenue dans la documentation de l'API des Films. Cette API permet de créer, lire, mettre à jour, supprimer des informations sur les films et gérer les catégories associées aux films.
 
 ## Commencer
 
@@ -34,6 +34,13 @@ L'API fournit les endpoints suivants :
 - `PUT /api/movies/{id}` : Met à jour un film existant.
 - `DELETE /api/movies/{id}` : Supprime un film.
 
+#### Catégories
+- `GET /api/categories` : Récupère toutes les catégories.
+- `GET /api/categories/{id}` : Récupère une catégorie par son ID.
+- `POST /api/categories` : Crée une nouvelle catégorie.
+- `PUT /api/categories/{id}` : Met à jour une catégorie existante.
+- `DELETE /api/categories/{id}` : Supprime une catégorie.
+
 ### Validation
 
 Les requêtes pour créer et mettre à jour un film doivent respecter les règles de validation suivantes :
@@ -43,11 +50,18 @@ Les requêtes pour créer et mettre à jour un film doivent respecter les règle
 - `release_date` : date, requis
 - `rating` : integer, requis
 
+Les requêtes pour créer et mettre à jour une categorie doivent respecter les règles de validation suivantes :
+
+- `name` : string, requis
+
 
 ### Utilitaires
 
 ```bash
 php artisan l5-swagger:generate
+```
+```bash
+php artisan make:seeder EntitySeeder
 ```
 ```bash
 php artisan make:model Entity -mcr
@@ -72,4 +86,3 @@ Install all api config
 ```bash
 php artisan install:api
 ```
-

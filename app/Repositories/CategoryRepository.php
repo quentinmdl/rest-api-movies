@@ -6,23 +6,32 @@ use App\Interfaces\CategoryRepositoryInterface;
 
 class CategoryRepository implements CategoryRepositoryInterface
 {
-    public function index(){
-        return Category::all();
-    }
+   public function index($perPage){
+      return Category::paginate($perPage);
+   }
 
-    public function getById($id){
-       return Category::find($id);
-    }
+   public function search($query){
+      $categories = Category::where('name', 'LIKE', "%{$query}%")
+      ->get();
 
-    public function store(array $data){
-       return Category::create($data);
-    }
+      return !$categories->isEmpty() ? $categories : null;
+   }
 
-    public function update(array $data,$id){
-       return Category::whereId($id)->update($data);
-    }
+   public function getById($id){
+      return Category::find($id);
+   }
 
-    public function delete($id){
-       Category::destroy($id);
-    }
+   public function store(array $data){
+      return Category::create($data);
+   }
+
+   public function update(array $data,$id){
+      $category = Category::find($id);
+      $category->update($data);
+      return $category;
+   }
+
+   public function delete($id){
+      return Category::destroy($id);
+   }
 } 

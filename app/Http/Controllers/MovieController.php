@@ -65,10 +65,9 @@ class MovieController extends Controller
         $perPage = request()->query('perPage', $perPage);
 
         $data = $this->movieRepositoryInterface->index($perPage);
-        $total = Movie::count();
 
         if ($data->isEmpty()) {
-            return ResponseClass::sendResponse([], 'No movies found', 500);
+            return ResponseClass::sendResponse([], 'No movies found', 404);
         }
         
         return ResponseClass::sendResponse(MovieResource::collection($data),'',200, true);
@@ -112,16 +111,12 @@ class MovieController extends Controller
     {
         $query = request()->query('query');
         if(!$query){
-            $responseCode = 422;
-            $responseMessage = 'Invalid query, missing query parameter {query}';
-            return ResponseClass::sendResponse("", $responseMessage, $responseCode);
+            return ResponseClass::sendResponse(null, "Invalid query, missing query parameter {query}", 422);
         }
 
         $movies = $this->movieRepositoryInterface->search($query);
         if (!$movies) {
-            $responseCode = 404;
-            $responseMessage = 'No movies found';
-            return ResponseClass::sendResponse("", $responseMessage, $responseCode);
+            return ResponseClass::sendResponse([], "No movies found", 404);
         }
 
         return ResponseClass::sendResponse(MovieResource::collection($movies), '', 200);
@@ -230,9 +225,7 @@ class MovieController extends Controller
     {
         $movie = $this->movieRepositoryInterface->getById($id);
         if (!$movie) {
-            $responseCode = 404;
-            $responseMessage = 'Movie not found';
-            return ResponseClass::sendResponse("",$responseMessage,$responseCode);
+            return ResponseClass::sendResponse(null, "Movie not found", 404);
         }
 
         return ResponseClass::sendResponse(new MovieResource($movie),'',200);
@@ -303,9 +296,7 @@ class MovieController extends Controller
 
             $movie = $this->movieRepositoryInterface->getById($id);
             if (!$movie) {
-                $responseCode = 404;
-                $responseMessage = 'Movie not found';
-                return ResponseClass::sendResponse("",$responseMessage,$responseCode);
+                return ResponseClass::sendResponse(null, "Movie not found", 404);
             }
 
             $updated = $this->movieRepositoryInterface->update($request->all(),$id);
@@ -318,7 +309,7 @@ class MovieController extends Controller
                 $responseMessage = 'Unable to process the request';
             }
             DB::commit();
-            return ResponseClass::sendResponse($movie ?? null,$responseMessage,$responseCode);
+            return ResponseClass::sendResponse($updated ?? null,$responseMessage,$responseCode);
 
         }catch(\Exception $ex){
             return ResponseClass::rollback($ex);
@@ -363,9 +354,7 @@ class MovieController extends Controller
     {
         $movie = $this->movieRepositoryInterface->getById($id);
         if (!$movie) {
-            $responseCode = 404;
-            $responseMessage = 'Movie not found';
-            return ResponseClass::sendResponse("",$responseMessage,$responseCode);
+            return ResponseClass::sendResponse(null, "Movie not found", 404);
         }
 
         $deleted = $this->movieRepositoryInterface->delete($id);

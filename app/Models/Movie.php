@@ -15,4 +15,10 @@ class Movie extends Model
         'release_date',
         'rating'
     ];
+
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'category_movies', 'movie_id', 'category_id');
+    }
+
 }

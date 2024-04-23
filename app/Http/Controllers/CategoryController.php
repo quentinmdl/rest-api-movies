@@ -8,10 +8,9 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 
 use App\Http\Resources\CategoryResource;
-use App\Http\Requests\StoreCategoryRequest;
-use App\Http\Requests\UpdateCategoryRequest;
 use App\Interfaces\CategoryRepositoryInterface;
 use App\Classes\ApiResponseClass as ResponseClass;
+use App\Http\Requests\StoreOrUpdateCategoryRequest;
 
 class CategoryController extends Controller
 {
@@ -32,7 +31,17 @@ class CategoryController extends Controller
      *     operationId="getCategoriesList",
      *     tags={"Categories"},
      *     summary="Get list of categories",
-     *     description="Returns list of categories",
+     *     description="Returns list of categories with optional pagination",
+     *     @OA\Parameter(
+     *         name="perPage",
+     *         in="query",
+     *         description="Number of categories per page",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="integer",
+     *             default=10
+     *         )
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -47,14 +56,66 @@ class CategoryController extends Controller
      *     )
      * )
      */
-    public function index()
+    public function index($perPage = 10)
     {
-        $data = $this->categoryRepositoryInterface->index();
+        $perPage = request()->query('perPage', $perPage);
+
+        $data = $this->categoryRepositoryInterface->index($perPage);
+
         if ($data->isEmpty()) {
-            return ResponseClass::sendResponse([], 'No categories found', 500);
+            return ResponseClass::sendResponse([], 'No categories found', 404);
         }
 
-        return ResponseClass::sendResponse(CategoryResource::collection($data),'',200);
+        return ResponseClass::sendResponse(CategoryResource::collection($data),'',200, true);
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/api/categories/search",
+     *     operationId="searchCategories",
+     *     tags={"Categories"},
+     *     summary="Search categories by name",
+     *     description="Returns a list of categories that match the search criteria",
+     *     @OA\Parameter(
+     *         name="query",
+     *         in="query",
+     *         description="Search query for category name",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(type="object")
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="No categories found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal server error"
+     *     )
+     * )
+     */
+    public function search()
+    {
+        $query = request()->query('query');
+        if(!$query){
+            return ResponseClass::sendResponse("", "Invalid query, missing query parameter {query}", 422);
+        }
+
+        $categories = $this->categoryRepositoryInterface->search($query);
+        if (!$categories) {
+            return ResponseClass::sendResponse([], "No categories found", 404);
+        }
+
+        return ResponseClass::sendResponse(CategoryResource::collection($categories), '', 200);
     }
 
     /**
@@ -72,8 +133,8 @@ class CategoryController extends Controller
      *         description="Category data",
      *         @OA\JsonContent(
      *             required={"name", "description", "release_date", "rating"},
-     *             @OA\Property(property="name", type="string", example="Un nouveau départ"),
-     *             @OA\Property(property="description", type="string", example="C'est l'histoire d'un nouveau départ..."),
+     *             @OA\Property(property="name", type="string", example="A new beginning"),
+     *             @OA\Property(property="description", type="string", example="It's the story of a new beginning..."),
      *             @OA\Property(property="release_date", type="string", format="date", example="2021-09-15"),
      *             @OA\Property(property="rating", type="number", format="float", example=5),
      *         ),
@@ -84,8 +145,8 @@ class CategoryController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="id", type="integer", format="int64", example=1),
-     *             @OA\Property(property="name", type="string", example="Un nouveau départ"),
-     *             @OA\Property(property="description", type="string", example="C'est l'histoire d'un nouveau départ..."),
+     *             @OA\Property(property="name", type="string", example="A new beginning"),
+     *             @OA\Property(property="description", type="string", example="It's the story of a new beginning..."),
      *             @OA\Property(property="release_date", type="string", format="date", example="2021-09-15"),
      *             @OA\Property(property="rating", type="number", format="float", example=5)
      *         ),
@@ -100,7 +161,7 @@ class CategoryController extends Controller
      *     )
      * )
      */
-    public function store(StoreCategoryRequest $request)
+    public function store(StoreOrUpdateCategoryRequest $request)
     {
         DB::beginTransaction();
         try{
@@ -140,8 +201,8 @@ class CategoryController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="id", type="integer", format="int64", example=1),
-     *             @OA\Property(property="name", type="string", example="Un nouveau départ"),
-     *             @OA\Property(property="description", type="string", example="C'est l'histoire d'un nouveau départ..."),
+     *             @OA\Property(property="name", type="string", example="A new beginning"),
+     *             @OA\Property(property="description", type="string", example="It's the story of a new beginning..."),
      *             @OA\Property(property="release_date", type="string", format="date", example="2021-09-15"),
      *             @OA\Property(property="rating", type="number", format="float", example=8)
      *         ),
@@ -160,9 +221,7 @@ class CategoryController extends Controller
     {
         $category = $this->categoryRepositoryInterface->getById($id);
         if (!$category) {
-            $responseCode = 404;
-            $responseMessage = 'Category not found';
-            return ResponseClass::sendResponse("",$responseMessage,$responseCode);
+            return ResponseClass::sendResponse(null, "Category not found", 404);
         }
 
         return ResponseClass::sendResponse(new CategoryResource($category),'',200);
@@ -193,8 +252,8 @@ class CategoryController extends Controller
      *         description="Category data",
      *         @OA\JsonContent(
      *             required={"name", "description", "release_date", "rating"},
-     *             @OA\Property(property="name", type="string", example="Un nouveau départ"),
-     *             @OA\Property(property="description", type="string", example="C'est l'histoire d'un nouveau départ..."),
+     *             @OA\Property(property="name", type="string", example="A new beginning"),
+     *             @OA\Property(property="description", type="string", example="It's the story of a new beginning..."),
      *             @OA\Property(property="release_date", type="string", format="date", example="2021-09-15"),
      *             @OA\Property(property="rating", type="number", format="float", example=8),
      *         ),
@@ -205,8 +264,8 @@ class CategoryController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="id", type="integer", format="int64", example=1),
-     *             @OA\Property(property="name", type="string", example="Un nouveau départ"),
-     *             @OA\Property(property="description", type="string", example="C'est l'histoire d'un nouveau départ..."),
+     *             @OA\Property(property="name", type="string", example="A new beginning"),
+     *             @OA\Property(property="description", type="string", example="It's the story of a new beginning..."),
      *             @OA\Property(property="release_date", type="string", format="date", example="2021-09-15"),
      *             @OA\Property(property="rating", type="number", format="float", example=8)
      *         )
@@ -225,16 +284,14 @@ class CategoryController extends Controller
      *     )
      * )
      */
-    public function update(UpdateCategoryRequest $request, $id)
+    public function update(StoreOrUpdateCategoryRequest $request, $id)
     {
         DB::beginTransaction();
         try{
 
             $category = $this->categoryRepositoryInterface->getById($id);
             if (!$category) {
-                $responseCode = 404;
-                $responseMessage = 'Category not found';
-                return ResponseClass::sendResponse("",$responseMessage,$responseCode);
+                return ResponseClass::sendResponse(null, "Category not found", 404);
             }
 
             $updated = $this->categoryRepositoryInterface->update($request->all(),$id);
@@ -247,7 +304,7 @@ class CategoryController extends Controller
                 $responseMessage = 'Unable to process the request';
             }
             DB::commit();
-            return ResponseClass::sendResponse($category ?? null,$responseMessage,$responseCode);
+            return ResponseClass::sendResponse($updated ?? null,$responseMessage,$responseCode);
 
         }catch(\Exception $ex){
             return ResponseClass::rollback($ex);
@@ -292,9 +349,7 @@ class CategoryController extends Controller
     {
         $category = $this->categoryRepositoryInterface->getById($id);
         if (!$category) {
-            $responseCode = 404;
-            $responseMessage = 'Category not found';
-            return ResponseClass::sendResponse("",$responseMessage,$responseCode);
+            return ResponseClass::sendResponse(null, "Category not found", 404);
         }
 
         $deleted = $this->categoryRepositoryInterface->delete($id);

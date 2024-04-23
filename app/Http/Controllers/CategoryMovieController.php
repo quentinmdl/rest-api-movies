@@ -72,8 +72,8 @@ class CategoryMovieController extends Controller
      *         description="CategoryMovie data",
      *         @OA\JsonContent(
      *             required={"name", "description", "release_date", "rating"},
-     *             @OA\Property(property="name", type="string", example="Un nouveau départ"),
-     *             @OA\Property(property="description", type="string", example="C'est l'histoire d'un nouveau départ..."),
+     *             @OA\Property(property="name", type="string", example="A New Beginning"),
+     *             @OA\Property(property="description", type="string", example="It's the story of a new beginning..."),
      *             @OA\Property(property="release_date", type="string", format="date", example="2021-09-15"),
      *             @OA\Property(property="rating", type="number", format="float", example=5),
      *         ),
@@ -84,8 +84,8 @@ class CategoryMovieController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="id", type="integer", format="int64", example=1),
-     *             @OA\Property(property="name", type="string", example="Un nouveau départ"),
-     *             @OA\Property(property="description", type="string", example="C'est l'histoire d'un nouveau départ..."),
+     *             @OA\Property(property="name", type="string", example="A New Beginning"),
+     *             @OA\Property(property="description", type="string", example="It's the story of a new beginning..."),
      *             @OA\Property(property="release_date", type="string", format="date", example="2021-09-15"),
      *             @OA\Property(property="rating", type="number", format="float", example=5)
      *         ),
@@ -140,8 +140,8 @@ class CategoryMovieController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="id", type="integer", format="int64", example=1),
-     *             @OA\Property(property="name", type="string", example="Un nouveau départ"),
-     *             @OA\Property(property="description", type="string", example="C'est l'histoire d'un nouveau départ..."),
+     *             @OA\Property(property="name", type="string", example="A New Beginning"),
+     *             @OA\Property(property="description", type="string", example="It's the story of a new beginning..."),
      *             @OA\Property(property="release_date", type="string", format="date", example="2021-09-15"),
      *             @OA\Property(property="rating", type="number", format="float", example=8)
      *         ),
@@ -193,8 +193,8 @@ class CategoryMovieController extends Controller
      *         description="CategoryMovie data",
      *         @OA\JsonContent(
      *             required={"name", "description", "release_date", "rating"},
-     *             @OA\Property(property="name", type="string", example="Un nouveau départ"),
-     *             @OA\Property(property="description", type="string", example="C'est l'histoire d'un nouveau départ..."),
+     *             @OA\Property(property="name", type="string", example="A New Beginning"),
+     *             @OA\Property(property="description", type="string", example="It's the story of a new beginning..."),
      *             @OA\Property(property="release_date", type="string", format="date", example="2021-09-15"),
      *             @OA\Property(property="rating", type="number", format="float", example=8),
      *         ),
@@ -205,8 +205,8 @@ class CategoryMovieController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="id", type="integer", format="int64", example=1),
-     *             @OA\Property(property="name", type="string", example="Un nouveau départ"),
-     *             @OA\Property(property="description", type="string", example="C'est l'histoire d'un nouveau départ..."),
+     *             @OA\Property(property="name", type="string", example="A New Beginning"),
+     *             @OA\Property(property="description", type="string", example="It's the story of a new beginning..."),
      *             @OA\Property(property="release_date", type="string", format="date", example="2021-09-15"),
      *             @OA\Property(property="rating", type="number", format="float", example=8)
      *         )
@@ -305,3 +305,4 @@ class CategoryMovieController extends Controller
         return ResponseClass::sendResponse(null,'CategoryMovie deleted successfully',204);
     }
 }
+
