@@ -44,8 +44,32 @@ Les requêtes pour créer et mettre à jour un film doivent respecter les règle
 - `rating` : integer, requis
 
 
-### Commandes
+### Utilitaires
 
 ```bash
 php artisan l5-swagger:generate
 ```
+```bash
+php artisan make:model Entity -mcr
+```
+```bash
+php artisan make:interface /Interfaces/EntityRepositoryInterface
+```
+```bash
+php artisan make:class /Repositories/EntityRepository
+```
+```bash
+php artisan make:provider RepositoryServiceProvider
+```
+```bash
+php artisan make:class /Classes/ApiResponseClass
+```
+```bash
+php artisan make:resource EntityResource
+```
+
+Install all api config 
+```bash
+php artisan install:api
+```
+
