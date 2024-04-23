@@ -28,6 +28,7 @@ Pour commencer à utiliser cette API, veuillez suivre les instructions ci-dessou
 L'API fournit les endpoints suivants :
 
 - `GET /api/movies` : Récupère tous les films.
+- `GET /api/movies/search` : Récupère tous les films filtrés par nom ou description.
 - `GET /api/movies/{id}` : Récupère un film par son ID.
 - `POST /api/movies` : Crée un nouveau film.
 - `PUT /api/movies/{id}` : Met à jour un film existant.
@@ -41,3 +42,10 @@ Les requêtes pour créer et mettre à jour un film doivent respecter les règle
 - `description` : string, requis
 - `release_date` : date, requis
 - `rating` : integer, requis
+
+
+### Commandes
+
+```bash
+php artisan l5-swagger:generate
+```

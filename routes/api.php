@@ -9,5 +9,6 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 
+Route::get('/movies/search', [MovieController::class, 'search']);
 Route::apiResource('/movies',MovieController::class);
 

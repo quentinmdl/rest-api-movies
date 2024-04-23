@@ -57,13 +57,13 @@ class MovieService {
 
             if(!empty($movies['results'])) {
                 foreach($movies['results'] as $movie) {
-                    $response = $this->client->request('GET', self::API_URL.'movie/'.$movie['id'].'?language=fr-FR', [
-                        'headers' => [
-                            'Authorization' => 'Bearer '.self::API_KEY,
-                            'accept' => 'application/json',
-                        ],
-                    ]);
                     try {
+                        $response = $this->client->request('GET', self::API_URL.'movie/'.$movie['id'], [
+                            'headers' => [
+                                'Authorization' => 'Bearer '.self::API_KEY,
+                                'accept' => 'application/json',
+                            ],
+                        ]);
                         if ($response->getStatusCode() == 200) {
                             $movieDetails = json_decode($response->getBody()->getContents(), true);
                             $items[] = $movieDetails;
@@ -71,7 +71,8 @@ class MovieService {
                             throw new \Exception("Film non trouvé avec l'ID externe: " . $movie['id']);
                         }
                     } catch (\GuzzleHttp\Exception\ClientException $e) {
-                        throw new \Exception("Erreur lors de la recherche du film: " . $e->getMessage());
+                        continue;
+                        // throw new \Exception("Erreur lors de la recherche du film: " . $e->getMessage());
                     }
                 }
             }

@@ -2,9 +2,10 @@
 
 namespace App\Providers;
 
-use App\Repository\MovieRepository;
+use App\Repositories\MovieRepository;
 use Illuminate\Support\ServiceProvider;
 use App\Interfaces\MovieRepositoryInterface;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,6 +22,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // JsonResource::withoutWrapping();
     }
 }

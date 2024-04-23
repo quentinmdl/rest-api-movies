@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Movie;
 
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\DB;
 
+use Illuminate\Support\Facades\DB;
 use App\Http\Resources\MovieResource;
 use App\Http\Requests\StoreMovieRequest;
 use App\Http\Requests\UpdateMovieRequest;
@@ -25,17 +26,26 @@ class MovieController extends Controller
     {
         $this->movieRepositoryInterface = $movieRepositoryInterface;
     }
-
     /**
-     * Display a listing of the resource.
+     * Displays a list of resources.
     **/
     /**
      * @OA\Get(
      *     path="/api/movies",
      *     operationId="getMoviesList",
      *     tags={"Movies"},
-     *     summary="Get list of movies",
-     *     description="Returns list of movies",
+     *     summary="Gets the list of movies",
+     *     description="Returns the list of movies with optional pagination",
+     *     @OA\Parameter(
+     *         name="perPage",
+     *         in="query",
+     *         description="Number of movies per page",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="integer",
+     *             default=10
+     *         )
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -50,14 +60,71 @@ class MovieController extends Controller
      *     )
      * )
      */
-    public function index()
+    public function index($perPage = 10)
     {
-        $data = $this->movieRepositoryInterface->index();
+        $perPage = request()->query('perPage', $perPage);
+
+        $data = $this->movieRepositoryInterface->index($perPage);
+        $total = Movie::count();
+
         if ($data->isEmpty()) {
             return ResponseClass::sendResponse([], 'No movies found', 500);
         }
+        
+        return ResponseClass::sendResponse(MovieResource::collection($data),'',200, true);
+    }
 
-        return ResponseClass::sendResponse(MovieResource::collection($data),'',200);
+    /**
+     * @OA\Get(
+     *     path="/api/movies/search",
+     *     operationId="searchMovies",
+     *     tags={"Movies"},
+     *     summary="Search movies by name or description",
+     *     description="Returns a list of movies that match the search criteria",
+     *     @OA\Parameter(
+     *         name="query",
+     *         in="query",
+     *         description="Search query for movie name or description",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(type="object")
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="No movies found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal server error"
+     *     )
+     * )
+     */
+    public function search()
+    {
+        $query = request()->query('query');
+        if(!$query){
+            $responseCode = 422;
+            $responseMessage = 'Invalid query, missing query parameter {query}';
+            return ResponseClass::sendResponse("", $responseMessage, $responseCode);
+        }
+
+        $movies = $this->movieRepositoryInterface->search($query);
+        if (!$movies) {
+            $responseCode = 404;
+            $responseMessage = 'No movies found';
+            return ResponseClass::sendResponse("", $responseMessage, $responseCode);
+        }
+
+        return ResponseClass::sendResponse(MovieResource::collection($movies), '', 200);
     }
 
     /**
@@ -75,8 +142,8 @@ class MovieController extends Controller
      *         description="Movie data",
      *         @OA\JsonContent(
      *             required={"name", "description", "release_date", "rating"},
-     *             @OA\Property(property="name", type="string", example="Un nouveau départ"),
-     *             @OA\Property(property="description", type="string", example="C'est l'histoire d'un nouveau départ..."),
+     *             @OA\Property(property="name", type="string", example="A New Beginning"),
+     *             @OA\Property(property="description", type="string", example="It's a story about a new beginning..."),
      *             @OA\Property(property="release_date", type="string", format="date", example="2021-09-15"),
      *             @OA\Property(property="rating", type="number", format="float", example=5),
      *         ),
@@ -87,8 +154,8 @@ class MovieController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="id", type="integer", format="int64", example=1),
-     *             @OA\Property(property="name", type="string", example="Un nouveau départ"),
-     *             @OA\Property(property="description", type="string", example="C'est l'histoire d'un nouveau départ..."),
+     *             @OA\Property(property="name", type="string", example="A New Beginning"),
+     *             @OA\Property(property="description", type="string", example="It's a story about a new beginning..."),
      *             @OA\Property(property="release_date", type="string", format="date", example="2021-09-15"),
      *             @OA\Property(property="rating", type="number", format="float", example=5)
      *         ),
@@ -143,8 +210,8 @@ class MovieController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="id", type="integer", format="int64", example=1),
-     *             @OA\Property(property="name", type="string", example="Un nouveau départ"),
-     *             @OA\Property(property="description", type="string", example="C'est l'histoire d'un nouveau départ..."),
+     *             @OA\Property(property="name", type="string", example="A New Beginning"),
+     *             @OA\Property(property="description", type="string", example="It's a story about a new beginning..."),
      *             @OA\Property(property="release_date", type="string", format="date", example="2021-09-15"),
      *             @OA\Property(property="rating", type="number", format="float", example=8)
      *         ),
@@ -171,6 +238,7 @@ class MovieController extends Controller
         return ResponseClass::sendResponse(new MovieResource($movie),'',200);
     }
 
+
     /**
      * Update the specified resource in storage.
      */
@@ -196,8 +264,8 @@ class MovieController extends Controller
      *         description="Movie data",
      *         @OA\JsonContent(
      *             required={"name", "description", "release_date", "rating"},
-     *             @OA\Property(property="name", type="string", example="Un nouveau départ"),
-     *             @OA\Property(property="description", type="string", example="C'est l'histoire d'un nouveau départ..."),
+     *             @OA\Property(property="name", type="string", example="A New Beginning"),
+     *             @OA\Property(property="description", type="string", example="It's a story about a new beginning..."),
      *             @OA\Property(property="release_date", type="string", format="date", example="2021-09-15"),
      *             @OA\Property(property="rating", type="number", format="float", example=8),
      *         ),
@@ -208,8 +276,8 @@ class MovieController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="id", type="integer", format="int64", example=1),
-     *             @OA\Property(property="name", type="string", example="Un nouveau départ"),
-     *             @OA\Property(property="description", type="string", example="C'est l'histoire d'un nouveau départ..."),
+     *             @OA\Property(property="name", type="string", example="A New Beginning"),
+     *             @OA\Property(property="description", type="string", example="It's a story about a new beginning..."),
      *             @OA\Property(property="release_date", type="string", format="date", example="2021-09-15"),
      *             @OA\Property(property="rating", type="number", format="float", example=8)
      *         )

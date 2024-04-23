@@ -1,14 +1,22 @@
 <?php
 
-namespace App\Repository;
+namespace App\Repositories;
 
 use App\Models\Movie;
 use App\Interfaces\MovieRepositoryInterface;
 
 class MovieRepository implements MovieRepositoryInterface
 {
-   public function index(){
-      return Movie::all();
+   public function index($perPage){
+      return Movie::paginate($perPage);
+   }
+
+   public function search($query){
+      $movies = Movie::where('name', 'LIKE', "%{$query}%")
+      ->orWhere('description', 'LIKE', "%{$query}%")
+      ->get();
+
+      return !$movies->isEmpty() ? $movies : null;
    }
 
    public function getById($id){

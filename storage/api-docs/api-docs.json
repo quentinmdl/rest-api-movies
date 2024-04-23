@@ -10,9 +10,21 @@
                 "tags": [
                     "Movies"
                 ],
-                "summary": "Get list of movies",
-                "description": "Returns list of movies",
+                "summary": "Gets the list of movies",
+                "description": "Returns the list of movies with optional pagination",
                 "operationId": "getMoviesList",
+                "parameters": [
+                    {
+                        "name": "perPage",
+                        "in": "query",
+                        "description": "Number of movies per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -54,11 +66,11 @@
                                 "properties": {
                                     "name": {
                                         "type": "string",
-                                        "example": "Un nouveau départ"
+                                        "example": "A New Beginning"
                                     },
                                     "description": {
                                         "type": "string",
-                                        "example": "C'est l'histoire d'un nouveau départ..."
+                                        "example": "It's a story about a new beginning..."
                                     },
                                     "release_date": {
                                         "type": "string",
@@ -68,7 +80,7 @@
                                     "rating": {
                                         "type": "number",
                                         "format": "float",
-                                        "example": 8.5
+                                        "example": 5
                                     }
                                 },
                                 "type": "object"
@@ -90,11 +102,11 @@
                                         },
                                         "name": {
                                             "type": "string",
-                                            "example": "Un nouveau départ"
+                                            "example": "A New Beginning"
                                         },
                                         "description": {
                                             "type": "string",
-                                            "example": "C'est l'histoire d'un nouveau départ..."
+                                            "example": "It's a story about a new beginning..."
                                         },
                                         "release_date": {
                                             "type": "string",
@@ -104,7 +116,7 @@
                                         "rating": {
                                             "type": "number",
                                             "format": "float",
-                                            "example": 8.5
+                                            "example": 5
                                         }
                                     },
                                     "type": "object"
@@ -114,6 +126,48 @@
                     },
                     "422": {
                         "description": "Invalid input data"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/api/movies/search": {
+            "get": {
+                "tags": [
+                    "Movies"
+                ],
+                "summary": "Search movies by name or description",
+                "description": "Returns a list of movies that match the search criteria",
+                "operationId": "searchMovies",
+                "parameters": [
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "description": "Search query for movie name or description",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No movies found"
                     },
                     "500": {
                         "description": "Internal server error"
@@ -155,11 +209,11 @@
                                         },
                                         "name": {
                                             "type": "string",
-                                            "example": "Un nouveau départ"
+                                            "example": "A New Beginning"
                                         },
                                         "description": {
                                             "type": "string",
-                                            "example": "C'est l'histoire d'un nouveau départ..."
+                                            "example": "It's a story about a new beginning..."
                                         },
                                         "release_date": {
                                             "type": "string",
@@ -169,7 +223,7 @@
                                         "rating": {
                                             "type": "number",
                                             "format": "float",
-                                            "example": 8.5
+                                            "example": 8
                                         }
                                     },
                                     "type": "object"
@@ -219,11 +273,11 @@
                                 "properties": {
                                     "name": {
                                         "type": "string",
-                                        "example": "Un nouveau départ"
+                                        "example": "A New Beginning"
                                     },
                                     "description": {
                                         "type": "string",
-                                        "example": "C'est l'histoire d'un nouveau départ..."
+                                        "example": "It's a story about a new beginning..."
                                     },
                                     "release_date": {
                                         "type": "string",
@@ -233,7 +287,7 @@
                                     "rating": {
                                         "type": "number",
                                         "format": "float",
-                                        "example": 8.5
+                                        "example": 8
                                     }
                                 },
                                 "type": "object"
@@ -255,11 +309,11 @@
                                         },
                                         "name": {
                                             "type": "string",
-                                            "example": "Un nouveau départ"
+                                            "example": "A New Beginning"
                                         },
                                         "description": {
                                             "type": "string",
-                                            "example": "C'est l'histoire d'un nouveau départ..."
+                                            "example": "It's a story about a new beginning..."
                                         },
                                         "release_date": {
                                             "type": "string",
@@ -269,7 +323,7 @@
                                         "rating": {
                                             "type": "number",
                                             "format": "float",
-                                            "example": 8.5
+                                            "example": 8
                                         }
                                     },
                                     "type": "object"

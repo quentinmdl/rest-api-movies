@@ -29,10 +29,14 @@ class ApiResponseClass
         throw new HttpResponseException(response()->json(["message"=> $message], 500));
     }
 
-    public static function sendResponse($result , $message ,$code=200){
-        $response=[
+    public static function sendResponse($data , $message ,$code=200, $merged = false){
+        if($merged) {
+            return $data;
+        }
+        $response['success'] = true;
+        $response = [
             'success' => true,
-            'data'    => $result
+            'data' => $data
         ];
         if(!empty($message)){
             $response['message'] = $message;
