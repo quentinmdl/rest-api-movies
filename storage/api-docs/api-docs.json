@@ -11,8 +11,20 @@
                     "Categories"
                 ],
                 "summary": "Get list of categories",
-                "description": "Returns list of categories",
+                "description": "Returns list of categories with optional pagination",
                 "operationId": "getCategoriesList",
+                "parameters": [
+                    {
+                        "name": "perPage",
+                        "in": "query",
+                        "description": "Number of categories per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -54,11 +66,11 @@
                                 "properties": {
                                     "name": {
                                         "type": "string",
-                                        "example": "Un nouveau départ"
+                                        "example": "A new beginning"
                                     },
                                     "description": {
                                         "type": "string",
-                                        "example": "C'est l'histoire d'un nouveau départ..."
+                                        "example": "It's the story of a new beginning..."
                                     },
                                     "release_date": {
                                         "type": "string",
@@ -90,11 +102,11 @@
                                         },
                                         "name": {
                                             "type": "string",
-                                            "example": "Un nouveau départ"
+                                            "example": "A new beginning"
                                         },
                                         "description": {
                                             "type": "string",
-                                            "example": "C'est l'histoire d'un nouveau départ..."
+                                            "example": "It's the story of a new beginning..."
                                         },
                                         "release_date": {
                                             "type": "string",
@@ -114,6 +126,48 @@
                     },
                     "422": {
                         "description": "Invalid input data"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/api/categories/search": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Search categories by name",
+                "description": "Returns a list of categories that match the search criteria",
+                "operationId": "searchCategories",
+                "parameters": [
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "description": "Search query for category name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No categories found"
                     },
                     "500": {
                         "description": "Internal server error"
@@ -155,11 +209,11 @@
                                         },
                                         "name": {
                                             "type": "string",
-                                            "example": "Un nouveau départ"
+                                            "example": "A new beginning"
                                         },
                                         "description": {
                                             "type": "string",
-                                            "example": "C'est l'histoire d'un nouveau départ..."
+                                            "example": "It's the story of a new beginning..."
                                         },
                                         "release_date": {
                                             "type": "string",
@@ -219,11 +273,11 @@
                                 "properties": {
                                     "name": {
                                         "type": "string",
-                                        "example": "Un nouveau départ"
+                                        "example": "A new beginning"
                                     },
                                     "description": {
                                         "type": "string",
-                                        "example": "C'est l'histoire d'un nouveau départ..."
+                                        "example": "It's the story of a new beginning..."
                                     },
                                     "release_date": {
                                         "type": "string",
@@ -255,11 +309,11 @@
                                         },
                                         "name": {
                                             "type": "string",
-                                            "example": "Un nouveau départ"
+                                            "example": "A new beginning"
                                         },
                                         "description": {
                                             "type": "string",
-                                            "example": "C'est l'histoire d'un nouveau départ..."
+                                            "example": "It's the story of a new beginning..."
                                         },
                                         "release_date": {
                                             "type": "string",
@@ -369,11 +423,11 @@
                                 "properties": {
                                     "name": {
                                         "type": "string",
-                                        "example": "Un nouveau départ"
+                                        "example": "A New Beginning"
                                     },
                                     "description": {
                                         "type": "string",
-                                        "example": "C'est l'histoire d'un nouveau départ..."
+                                        "example": "It's the story of a new beginning..."
                                     },
                                     "release_date": {
                                         "type": "string",
@@ -405,11 +459,11 @@
                                         },
                                         "name": {
                                             "type": "string",
-                                            "example": "Un nouveau départ"
+                                            "example": "A New Beginning"
                                         },
                                         "description": {
                                             "type": "string",
-                                            "example": "C'est l'histoire d'un nouveau départ..."
+                                            "example": "It's the story of a new beginning..."
                                         },
                                         "release_date": {
                                             "type": "string",
@@ -470,11 +524,11 @@
                                         },
                                         "name": {
                                             "type": "string",
-                                            "example": "Un nouveau départ"
+                                            "example": "A New Beginning"
                                         },
                                         "description": {
                                             "type": "string",
-                                            "example": "C'est l'histoire d'un nouveau départ..."
+                                            "example": "It's the story of a new beginning..."
                                         },
                                         "release_date": {
                                             "type": "string",
@@ -534,11 +588,11 @@
                                 "properties": {
                                     "name": {
                                         "type": "string",
-                                        "example": "Un nouveau départ"
+                                        "example": "A New Beginning"
                                     },
                                     "description": {
                                         "type": "string",
-                                        "example": "C'est l'histoire d'un nouveau départ..."
+                                        "example": "It's the story of a new beginning..."
                                     },
                                     "release_date": {
                                         "type": "string",
@@ -570,11 +624,11 @@
                                         },
                                         "name": {
                                             "type": "string",
-                                            "example": "Un nouveau départ"
+                                            "example": "A New Beginning"
                                         },
                                         "description": {
                                             "type": "string",
-                                            "example": "C'est l'histoire d'un nouveau départ..."
+                                            "example": "It's the story of a new beginning..."
                                         },
                                         "release_date": {
                                             "type": "string",

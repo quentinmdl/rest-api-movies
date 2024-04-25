@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MediaController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\CategoryController;
 
@@ -15,3 +16,5 @@ Route::apiResource('/movies',MovieController::class);
 
 Route::get('/categories/search', [CategoryController::class, 'search']);
 Route::apiResource('/categories',CategoryController::class);
+
+Route::apiResource('/medias',MediaController::class);

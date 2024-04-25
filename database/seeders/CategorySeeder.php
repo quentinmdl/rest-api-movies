@@ -30,7 +30,7 @@ class CategorySeeder extends Seeder
         foreach ($categories as $category) {   
             Category::create([
                 'name' => $category['name'],
-                'created_at' => Carbon::now()
+                'created_at' => Carbon::now()->format('Y-m-d H:i:s')
             ]);
         }
     }

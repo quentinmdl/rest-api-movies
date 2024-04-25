@@ -28,6 +28,7 @@ class UpdateMovieRequest extends FormRequest
             'description' => 'required',
             'release_date' => 'required|date',
             'rating' => 'required|numeric',
+            'media' => 'required|file|mimes:jpeg,jpg,png,gif,svg,webp|max:2048'
         ];
     }
 

@@ -7,7 +7,7 @@ use App\Interfaces\CategoryRepositoryInterface;
 class CategoryRepository implements CategoryRepositoryInterface
 {
    public function index($perPage){
-      return Category::paginate($perPage);
+      return Category::orderBy('id', 'asc')->paginate($perPage);
    }
 
    public function search($query){

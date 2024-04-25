@@ -7,7 +7,7 @@ use App\Interfaces\MovieRepositoryInterface;
 class MovieRepository implements MovieRepositoryInterface
 {
    public function index($perPage){
-      return Movie::paginate($perPage);
+      return Movie::orderBy('id', 'asc')->paginate($perPage);
    }
 
    public function search($query){

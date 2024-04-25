@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {   
         $this->call(CategorySeeder::class);
+        $this->call(MediaTypeSeeder::class);
         $this->call(MovieSeeder::class);
     }
 }

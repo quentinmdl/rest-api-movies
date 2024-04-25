@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Media;
+
 use App\Models\Movie;
-
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 
+use App\Helpers\MediaUploader;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\MovieResource;
 use App\Http\Requests\StoreMovieRequest;
@@ -22,9 +24,13 @@ class MovieController extends Controller
     
     private MovieRepositoryInterface $movieRepositoryInterface;
     
-    public function __construct(MovieRepositoryInterface $movieRepositoryInterface)
+    public function __construct(
+        MovieRepositoryInterface $movieRepositoryInterface, 
+        MediaUploader $mediaUploader
+    )
     {
         $this->movieRepositoryInterface = $movieRepositoryInterface;
+        $this->mediaUploader = $mediaUploader;
     }
     /**
      * Displays a list of resources.
@@ -169,7 +175,20 @@ class MovieController extends Controller
     {
         DB::beginTransaction();
         try{
-            $movie = $this->movieRepositoryInterface->store($request->all());
+            $data['media'] = $request->file('media');
+
+            $path = $this->mediaUploader->upload($data['media'], 'poster');
+            $media = Media::storeOrUpdateMedia($path, 'poster');
+
+            $data = [
+                'name' => $request->input('name'),
+                'description' => $request->input('description'),
+                'release_date' => $request->input('release_date'),
+                'rating' => $request->input('rating'),
+                'media_id' => $media->id ?? null
+            ];
+
+            $movie = $this->movieRepositoryInterface->store($data);
 
             DB::commit();
             return ResponseClass::sendResponse(new MovieResource($movie),'Movie created successfully',201);
@@ -293,13 +312,28 @@ class MovieController extends Controller
     {
         DB::beginTransaction();
         try{
-
             $movie = $this->movieRepositoryInterface->getById($id);
             if (!$movie) {
                 return ResponseClass::sendResponse(null, "Movie not found", 404);
             }
+            
+            $currentPath = $movie->media->media_path;
+            
+            $data['media'] = $request->file('media');
+            
+            $fileName = $this->mediaUploader->upload($data['media'], 'poster', $currentPath);
 
-            $updated = $this->movieRepositoryInterface->update($request->all(),$id);
+            $media = Media::storeOrUpdateMedia($fileName, 'poster', $movie->media_id);
+
+            $data = [
+                'name' => $request->input('name'),
+                'description' => $request->input('description'),
+                'release_date' => $request->input('release_date'),
+                'rating' => $request->input('rating'),
+                'media_id' => $media->id ?? null
+            ];
+
+            $updated = $this->movieRepositoryInterface->update($data,$id);
 
             if ($updated) {
                 $responseCode = 200;
