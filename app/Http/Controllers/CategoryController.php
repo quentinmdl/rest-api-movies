@@ -163,6 +163,10 @@ class CategoryController extends Controller
      */
     public function store(StoreOrUpdateCategoryRequest $request)
     {
+        // if ($request->fails()) {
+        //     return ResponseClass::sendResponse([], $request->errors(), 422);
+        // }
+
         DB::beginTransaction();
         try{
             $category = $this->categoryRepositoryInterface->store($request->all());
