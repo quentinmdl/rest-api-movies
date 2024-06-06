@@ -21,8 +21,6 @@ class CreateTokensTable extends Migration
             $table->dateTime('access_token_expiry');
             $table->dateTime('refresh_token_expiry')->nullable();
             $table->timestamps();
-
-            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
