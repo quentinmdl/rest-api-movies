@@ -53,7 +53,7 @@ class MediaController extends Controller
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="No medias found"
+     *         description="No media(s) found"
      *     )
      * )
      */

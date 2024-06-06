@@ -3,13 +3,19 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Role;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasUuids;
+
+    protected $keyType = 'string';
+    
+    public $incrementing = false;
 
     /**
      * The attributes that are mass assignable.
@@ -43,5 +49,19 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * The "booted" method of the model.
+     */
+    protected static function booted()
+    {
+        static::creating(function ($user) {
+            // Set the role_id to 'customer' role by default
+            $customerRole = Role::where('name', 'ROLE_USER')->first();
+            if ($customerRole) {
+                $user->role_id = $customerRole->id;
+            }
+        });
     }
 }

@@ -46,7 +46,8 @@ class MovieSeeder extends Seeder
                 'description' => $movie['overview'],
                 'media_id' => $media->id ?? null,
                 'release_date' => date("Y-m-d", strtotime($movie['release_date'])),
-                'rating' => intval(round($movie['vote_average'], 0)),
+                'rate' => rand(0, 5),
+                'duration' => rand(0, 240),
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s')
             ]);
 

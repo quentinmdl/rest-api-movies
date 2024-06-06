@@ -10,8 +10,8 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Resources\CategoryMovieResource;
 use App\Http\Requests\StoreCategoryMovieRequest;
 use App\Http\Requests\UpdateCategoryMovieRequest;
-use App\Interfaces\CategoryMovieRepositoryInterface;
 use App\Classes\ApiResponseClass as ResponseClass;
+use App\Interfaces\CategoryMovieRepositoryInterface;
 
 class CategoryMovieController extends Controller
 {
@@ -43,7 +43,7 @@ class CategoryMovieController extends Controller
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="No categoriesMovies found"
+     *         description="No categoriesMovie(s) found"
      *     )
      * )
      */

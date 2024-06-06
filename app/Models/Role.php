@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class CategoryMovie extends Model
+class Role extends Model
 {
     use HasFactory, HasUuids;
 
@@ -15,7 +17,7 @@ class CategoryMovie extends Model
     public $incrementing = false;
 
     protected $fillable = [
-        'category_id',
-        'movie_id'
+        'name'
     ];
+
 }

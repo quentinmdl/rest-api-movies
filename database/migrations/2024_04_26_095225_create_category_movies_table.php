@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('category_movies', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBiginteger('category_id')->unsigned();
-            $table->unsignedBiginteger('movie_id')->unsigned();
+            $table->uuid('id')->primary();
+            $table->foreignUuid('category_id');
+            $table->foreignUuid('movie_id');
             $table->timestamps();
 
             $table->foreign('category_id')->references('id')

@@ -12,10 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('medias', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('media_path')->nullable();
             $table->string('media_url')->nullable();
-            $table->unsignedBigInteger('media_type');
+            $table->foreignUuid('media_type');
             $table->timestamps();
             
             $table->foreign('media_type')->references('id')->on('media_types');

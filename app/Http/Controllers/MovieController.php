@@ -11,8 +11,7 @@ use App\Helpers\MediaUploader;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\MovieResource;
-use App\Http\Requests\StoreMovieRequest;
-use App\Http\Requests\UpdateMovieRequest;
+use App\Http\Requests\StoreOrUpdateMovieRequest;
 use App\Interfaces\MovieRepositoryInterface;
 use App\Classes\ApiResponseClass as ResponseClass;
 
@@ -32,6 +31,7 @@ class MovieController extends Controller
         $this->movieRepositoryInterface = $movieRepositoryInterface;
         $this->mediaUploader = $mediaUploader;
     }
+
     /**
      * Displays a list of resources.
     **/
@@ -62,7 +62,7 @@ class MovieController extends Controller
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="No movies found"
+     *         description="No movie(s) found"
      *     )
      * )
      */
@@ -73,7 +73,7 @@ class MovieController extends Controller
         $data = $this->movieRepositoryInterface->index($perPage);
 
         if ($data->isEmpty()) {
-            return ResponseClass::sendResponse([], 'No movies found', 404);
+            return ResponseClass::sendResponse([], 'No movies found', 204);
         }
         
         return ResponseClass::sendResponse(MovieResource::collection($data),'',200, true);
@@ -146,7 +146,8 @@ class MovieController extends Controller
      *             @OA\Property(property="name", type="string", example="A New Beginning"),
      *             @OA\Property(property="description", type="string", example="It's a story about a new beginning..."),
      *             @OA\Property(property="release_date", type="string", format="date", example="2021-09-15"),
-     *             @OA\Property(property="rating", type="number", format="float", example=5),
+     *             @OA\Property(property="rate", type="number", format="int", example=5),
+     *             @OA\Property(property="duration", type="number", format="int", example=8)
      *         ),
      *     ),
      *     @OA\Response(
@@ -158,7 +159,8 @@ class MovieController extends Controller
      *             @OA\Property(property="name", type="string", example="A New Beginning"),
      *             @OA\Property(property="description", type="string", example="It's a story about a new beginning..."),
      *             @OA\Property(property="release_date", type="string", format="date", example="2021-09-15"),
-     *             @OA\Property(property="rating", type="number", format="float", example=5)
+     *             @OA\Property(property="rate", type="number", format="int", example=5),
+     *             @OA\Property(property="duration", type="number", format="int", example=8)
      *         ),
      *     ),
      *     @OA\Response(
@@ -171,7 +173,7 @@ class MovieController extends Controller
      *     )
      * )
      */
-    public function store(StoreMovieRequest $request)
+    public function store(StoreOrUpdateMovieRequest $request)
     {
         DB::beginTransaction();
         try{
@@ -184,7 +186,8 @@ class MovieController extends Controller
                 'name' => $request->input('name'),
                 'description' => $request->input('description'),
                 'release_date' => $request->input('release_date'),
-                'rating' => $request->input('rating'),
+                'rate' => $request->input('rate'),
+                'duration' => $request->input('duration'),
                 'media_id' => $media->id ?? null
             ];
 
@@ -227,7 +230,8 @@ class MovieController extends Controller
      *             @OA\Property(property="name", type="string", example="A New Beginning"),
      *             @OA\Property(property="description", type="string", example="It's a story about a new beginning..."),
      *             @OA\Property(property="release_date", type="string", format="date", example="2021-09-15"),
-     *             @OA\Property(property="rating", type="number", format="float", example=8)
+     *             @OA\Property(property="rate", type="number", format="int", example=8),
+     *             @OA\Property(property="duration", type="number", format="int", example=8)
      *         ),
      *     ),
      *     @OA\Response(
@@ -279,7 +283,8 @@ class MovieController extends Controller
      *             @OA\Property(property="name", type="string", example="A New Beginning"),
      *             @OA\Property(property="description", type="string", example="It's a story about a new beginning..."),
      *             @OA\Property(property="release_date", type="string", format="date", example="2021-09-15"),
-     *             @OA\Property(property="rating", type="number", format="float", example=8),
+     *             @OA\Property(property="rate", type="number", format="int", example=8),
+     *             @OA\Property(property="duration", type="number", format="int", example=8)
      *         ),
      *     ),
      *     @OA\Response(
@@ -291,7 +296,8 @@ class MovieController extends Controller
      *             @OA\Property(property="name", type="string", example="A New Beginning"),
      *             @OA\Property(property="description", type="string", example="It's a story about a new beginning..."),
      *             @OA\Property(property="release_date", type="string", format="date", example="2021-09-15"),
-     *             @OA\Property(property="rating", type="number", format="float", example=8)
+     *             @OA\Property(property="rate", type="number", format="int", example=8),
+     *             @OA\Property(property="duration", type="number", format="int", example=8)
      *         )
      *     ),
      *     @OA\Response(
@@ -308,7 +314,7 @@ class MovieController extends Controller
      *     )
      * )
      */
-    public function update(UpdateMovieRequest $request, $id)
+    public function update(StoreOrUpdateMovieRequest $request, $id)
     {
         DB::beginTransaction();
         try{
@@ -329,7 +335,8 @@ class MovieController extends Controller
                 'name' => $request->input('name'),
                 'description' => $request->input('description'),
                 'release_date' => $request->input('release_date'),
-                'rating' => $request->input('rating'),
+                'rate' => $request->input('rate'),
+                'duration' => $request->input('duration'),
                 'media_id' => $media->id ?? null
             ];
 

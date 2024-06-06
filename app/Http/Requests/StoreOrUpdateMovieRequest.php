@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 
-class UpdateMovieRequest extends FormRequest
+class StoreOrUpdateMovieRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,10 +24,11 @@ class UpdateMovieRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required',
-            'description' => 'required',
+            'name' => 'required|string|max:128',
+            'description' => 'required|string|max:4096',
             'release_date' => 'required|date',
-            'rating' => 'required|numeric',
+            'rate' => 'required|numeric|min:0|max:5',
+            'duration' => 'required|numeric|min:1',
             'media' => 'required|file|mimes:jpeg,jpg,png,gif,svg,webp|max:2048'
         ];
     }
@@ -38,6 +39,6 @@ class UpdateMovieRequest extends FormRequest
             'success'   => false,
             'message'   => 'Validation errors',
             'data'      => $validator->errors()
-        ],422));
+        ], 422));
     }
 }

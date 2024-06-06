@@ -47,7 +47,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL_API}}/movies/search?query=Grai",
+							"raw": "{{BASE_URL_API}}/movies/search?query=",
 							"host": [
 								"{{BASE_URL_API}}"
 							],
@@ -58,7 +58,7 @@
 							"query": [
 								{
 									"key": "query",
-									"value": "Grai"
+									"value": ""
 								}
 							]
 						}
@@ -71,13 +71,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL_API}}/movies/1",
+							"raw": "{{BASE_URL_API}}/movies/9c32b3a4-05c2-4478-a77d-242a6b304d40",
 							"host": [
 								"{{BASE_URL_API}}"
 							],
 							"path": [
 								"movies",
-								"1"
+								"9c32b3a4-05c2-4478-a77d-242a6b304d40"
 							]
 						}
 					},
@@ -489,6 +489,11 @@
 		{
 			"key": "BASE_URL",
 			"value": "http://127.0.0.1:8000/",
+			"type": "string"
+		},
+		{
+			"key": "movieId",
+			"value": "",
 			"type": "string"
 		}
 	]

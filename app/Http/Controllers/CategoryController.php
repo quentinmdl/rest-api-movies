@@ -52,7 +52,7 @@ class CategoryController extends Controller
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="No categories found"
+     *         description="No categorie(s) found"
      *     )
      * )
      */

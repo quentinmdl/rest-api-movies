@@ -17,11 +17,11 @@ To start using this API, please follow the instructions below.
 ### Installation
 
 1. Clone the repository to your local machine.
-2. Run `composer install` to install the dependencies.
+2. Run `composer install` and `npm i` to install the dependencies.
 3. Copy `.env.example` to `.env` and configure your database.
 4. Run `php artisan key:generate` to generate the application key.
 5. Run `docker compose up` to start the database.
-6. Run `php artisan migrate:refresh --seed` to create the database tables and seed data.
+6. Run `php artisan migrate:refresh --seed` to create the database tables and seed fake data.
 7. Run `php artisan serve` to start the development server.
 
 ### Usage
@@ -32,7 +32,7 @@ The API provides the following endpoints:
 
 - `GET /api/movies`: Retrieves all movies.
 - `GET /api/movies/search`: Retrieves all movies filtered by name or description.
-- `GET /api/movies/{id}`: Retrieves a movie by its ID.
+- `GET /api/movies/{id}`: Retrieves a movie by its UID.
 - `POST /api/movies`: Creates a new movie.
 - `PUT /api/movies/{id}`: Updates an existing movie.
 - `DELETE /api/movies/{id}`: Deletes a movie.
@@ -40,7 +40,7 @@ The API provides the following endpoints:
 #### Categories
 
 - `GET /api/categories`: Retrieves all categories.
-- `GET /api/categories/{id}`: Retrieves a category by its ID.
+- `GET /api/categories/{id}`: Retrieves a category by its UID.
 - `POST /api/categories`: Creates a new category.
 - `PUT /api/categories/{id}`: Updates an existing category.
 - `DELETE /api/categories/{id}`: Deletes a category.
@@ -48,7 +48,7 @@ The API provides the following endpoints:
 #### Media
 
 - `GET /api/medias`: Retrieves all media.
-- `GET /api/medias/{id}`: Retrieves a media by its ID.
+- `GET /api/medias/{id}`: Retrieves a media by its UID.
 - `DELETE /api/medias/{id}`: Deletes a media.
 
 
@@ -59,7 +59,7 @@ Requests to create and update a **movie** must adhere to the following validatio
 - `name`: string, required
 - `description`: string, required
 - `release_date`: date, required
-- `rating`: integer, required
+- `rate`: integer, required
 - `media_id`: integer, can be nullable, must be a valid foreign key reference to `medias` table
 
 
@@ -85,9 +85,9 @@ You can access the API documentation and test the endpoints directly via Swagger
 
 #### Postman 
 
-Download and implement `Movies.postman_collection.json` in Postman to test the API.
+Download and implement in Postman folder : `movies.postman.json` file in Postman to test the API.
 
-- `Movies.postman_collection.json`
+- `Postman/movies.postman.json`
 
 
 ### Utilities

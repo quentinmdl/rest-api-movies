@@ -10,6 +10,10 @@ use App\Http\Controllers\CategoryController;
 //     return $request->user();
 // })->middleware('auth:sanctum');
 
+Route::get('/health', function () {
+    return response()->json(['uptime' => now()->diffInSeconds(config('app.started_at'))], 200);
+});
+
 
 Route::get('/movies/search', [MovieController::class, 'search']);
 Route::apiResource('/movies',MovieController::class);

@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('media_types', function (Blueprint $table) {
-            $table->id();
-            $table->string('name', 100)->unique();
+            $table->uuid('id')->primary();
+            $table->string('name', 100)->unique()->nullable(false);
             $table->timestamps();
         });
     }

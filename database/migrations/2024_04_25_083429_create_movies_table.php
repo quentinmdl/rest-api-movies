@@ -12,12 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('movies', function (Blueprint $table) {
-            $table->id();
-            $table->string('name', 128);
-            $table->text('description', 2048);
-            $table->date('release_date');
-            $table->unsignedBigInteger('media_id')->nullable();
-            $table->integer('rating')->nullable();
+            $table->uuid('id')->primary();
+            $table->string('name', 128)->nullable(false);
+            $table->text('description', 4096)->nullable(false);
+            $table->date('release_date')->nullable(false);
+            $table->foreignUuid('media_id')->nullable();
+            $table->integer('rate')->nullable(false)->unsigned();
+            $table->integer('duration')->nullable(false)->unsigned();
             $table->timestamps();
             
             $table->foreign('media_id')->references('id')->on('medias')->onDelete('set null');
