@@ -217,8 +217,8 @@ class MovieController extends Controller
      *         description="ID of movie to return",
      *         required=true,
      *         @OA\Schema(
-     *             type="integer",
-     *             format="int64"
+     *             type="string",
+     *             format="uuid"
      *         )
      *     ),
      *     @OA\Response(
@@ -271,8 +271,8 @@ class MovieController extends Controller
      *         description="ID of movie that needs to be updated",
      *         required=true,
      *         @OA\Schema(
-     *             type="integer",
-     *             format="int64"
+     *             type="string",
+     *             format="uuid"
      *         )
      *     ),
      *     @OA\RequestBody(
@@ -373,8 +373,8 @@ class MovieController extends Controller
      *         description="ID of movie to delete",
      *         required=true,
      *         @OA\Schema(
-     *             type="integer",
-     *             format="int64"
+     *             type="string",
+     *             format="uuid"
      *         )
      *     ),
      *     @OA\Response(
