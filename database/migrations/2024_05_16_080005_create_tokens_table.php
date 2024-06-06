@@ -15,12 +15,14 @@ class CreateTokensTable extends Migration
     {
         Schema::create('tokens', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignUuid('user_id')->nullable(false)->constrained()->onDelete('cascade');
             $table->text('access_token');
             $table->text('refresh_token')->nullable();
             $table->dateTime('access_token_expiry');
             $table->dateTime('refresh_token_expiry')->nullable();
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
