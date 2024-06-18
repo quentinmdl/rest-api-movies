@@ -19,8 +19,8 @@ To start using this API, please follow the instructions below.
 1. Clone the repository to your local machine.
 2. Run `composer install` and `npm i` to install the dependencies.
 3. Copy `.env.example` to `.env` and configure your database.
-4. Run `php artisan key:generate` to generate the application key.
-5. Run `docker compose up` to start the database.
+4. Complete `.env` and don't forget the `API_DBMOVIE_KEY` for seeding db movies : eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjZjMwYWIzNmE3Y2M4MjQ1OWIzMjk0MTZhZmUxNzM5MCIsInN1YiI6IjY2MjYyNDViYjlhMGJkMDE3YWQ3MWFlNSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.OHgbOVLByCQfvUAiVpLUHRz_Ehwq9l5MkdcYhhE4RF4
+5. Run `php artisan key:generate` to generate the application key.
 6. Run `php artisan migrate:refresh --seed` to create the database tables and seed fake data.
 7. Run `php artisan serve` to start the development server.
 
